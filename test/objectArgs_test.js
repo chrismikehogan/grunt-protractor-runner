@@ -2,14 +2,14 @@ var exec = require('child_process').execSync,
     runnerStdOut;
 
 exports.testCucumberOpts = function (test) {
-    var cmd = 'grunt protractor:testTargetConfigFile --cucumberOpts={\\"tags\\":\\"@quick\\"} --verbose',
+    var cmd = 'grunt protractor:testTargetConfigFile --cucumberOpts.tags=@quick --verbose',
         testDone = false;
 
     runnerStdOut = exec(cmd)
     if (typeof runnerStdOut === 'object'){
         runnerStdOut = runnerStdOut.toString();
     }
-    if (runnerStdOut.indexOf('Spawn node with arguments:') > -1 && runnerStdOut.indexOf('--cucumberOpts.tags @quick') > -1) {
+    if (runnerStdOut.indexOf('Spawn node with arguments:') > -1 && runnerStdOut.indexOf('--cucumberOpts.tags=@quick') > -1) {
         test.ok(true, 'CucumberOpts test passed!')
         test.done();
     } else {
@@ -17,4 +17,3 @@ exports.testCucumberOpts = function (test) {
         test.done();
     }
 };
-

@@ -62,17 +62,17 @@ module.exports = function(grunt) {
 
     // Iterate over all supported arguments.
     strArgs.forEach(function(a) {
-      if (a in opts.args || grunt.option(a)) {
-        args.push('--'+a, grunt.option(a) || opts.args[a]);
+      if (a in opts.args) {
+        args.push('--'+a, opts.args[a]);
       }
     });
     listArgs.forEach(function(a) {
-      if (a in opts.args || grunt.option(a)) {
-        args.push('--'+a,  grunt.option(a) || opts.args[a].join(","));
+      if (a in opts.args) {
+        args.push('--'+a, opts.args[a].join(","));
       }
     });
     boolArgs.forEach(function(a) {
-      if (a in opts.args || grunt.option(a)) {
+      if (a in opts.args) {
         args.push('--'+a);
       }
     });
@@ -110,9 +110,14 @@ module.exports = function(grunt) {
             args.push(prefix+"."+key, val);
           }
         }
-      })("--" + a, grunt.option(a) || opts.args[a], args);
+      })("--" + a, opts.args[a], args);
     });
 
+    // Pass any remaining grunt options to protractor verbatim.
+    //
+    // This allows for adding to Object-flavored arguments, and for overriding
+    // any other flavor of arguments, via the command line.
+    args = args.concat(grunt.option.flags());
 
     // Spawn protractor command
     var done = this.async();
